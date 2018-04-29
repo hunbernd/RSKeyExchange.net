@@ -1,0 +1,12 @@
+﻿@page
+@model RSKeyExchange.Pages.KeysModel
+@{
+    ViewData["Title"] = "Aktív felhasználók kulcsai";
+}
+
+<h2>Kulcsok</h2>
+@foreach(var peer in Model.Peers) {
+    <div>
+        @peer.name: @peer.location
+    </div>
+}
