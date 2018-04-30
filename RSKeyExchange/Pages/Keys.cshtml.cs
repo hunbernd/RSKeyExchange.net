@@ -8,10 +8,18 @@ using RSKeyExchange.RetroShareAPI;
 
 namespace RSKeyExchange.Pages
 {
+	public struct PeerInfo
+	{
+		public string name;
+		public string location;
+		public string type;
+		public string certificate;
+	}
+
     public class KeysModel : PageModel
     {
 		private RetroShareHTTPClient _client;
-		public IList<Location> Peers { get; private set; }
+		public IList<PeerInfo> Peers { get; private set; }
 
 		public KeysModel(RetroShareHTTPClient rsapi)
 		{
@@ -20,7 +28,19 @@ namespace RSKeyExchange.Pages
 
 		public async Task OnGetAsync()
         {
-			Peers = await _client.GetActivePeers();
+			Peers = new List<PeerInfo>();
+			var locations = await _client.GetActivePeers();
+			foreach(Location l in locations) {
+				String cert = await _client.GetCert(l.peer_id);
+				PeerInfo info = new PeerInfo {
+					name = l.name,
+					location = l.location,
+					type = l.nodeType,
+					certificate = cert
+				};
+				Peers.Add(info);
+			}
+
         }
     }
 }

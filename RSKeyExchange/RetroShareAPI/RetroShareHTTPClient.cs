@@ -26,8 +26,8 @@ namespace RSKeyExchange.RetroShareAPI
 				Uri peersUrl = new Uri($"/{URIADD}/peers", UriKind.Relative);
 				var res = await _client.GetAsync(peersUrl);
 				res.EnsureSuccessStatusCode();
-				var resp = await res.Content.ReadAsJsonAsync<Response<IList<Peer>>>();
-				if(resp.data == null)
+				var resp = await res.Content.ReadAsAsync<Response<IList<Peer>>>();
+				if(resp.returncode != "ok")
 					throw new Exception("Error accessing to RetroShare API: " + resp.debug_msg);
 				else
 					return resp.data;
@@ -36,19 +36,21 @@ namespace RSKeyExchange.RetroShareAPI
 			}
 		}
 
-		//public async Task<string> GetCert(string peerid)
-		//{
-		//	try {
-		//		var episodesUrl = new Uri($"/v1/podcasts/shownum/episodes.json?api_key={_apiKey}", UriKind.Relative);
-		//		_logger.LogWarning($"HttpClient: Loading {episodesUrl}");
-		//		var res = await _client.GetAsync(episodesUrl);
-		//		res.EnsureSuccessStatusCode();
-		//		return await res.Content.ReadAsAsync<List<Show>>();
-		//	} catch(HttpRequestException ex) {
-		//		_logger.LogError($"An error occurred connecting to SimpleCast API {ex.ToString()}");
-		//		throw;
-		//	}
-		//}
+		public async Task<string> GetCert(string peerid)
+		{
+			try {
+				Uri peersUrl = new Uri($"/{URIADD}/peers/get_node_options", UriKind.Relative);
+				var res = await _client.PostAsJsonAsync<GetNodeOptionsReq>(peersUrl, new GetNodeOptionsReq(peerid));
+				res.EnsureSuccessStatusCode();
+				var resp = await res.Content.ReadAsAsync<Response<GetNodeOptionsResp>>();
+				if(resp.returncode != "ok")
+					throw new Exception("Error accessing to RetroShare API: " + resp.debug_msg);
+				else
+					return resp.data.certificate;
+			} catch(HttpRequestException) {
+				throw;
+			}
+		}
 
 		public async Task<IList<Location>> GetActivePeers()
 		{
