@@ -4,14 +4,20 @@
     Layout = null;
 }
 <kml xmlns="http://www.opengis.net/kml/2.2">
-    <Placemark>
-        <name>Simple placemark</name>
-        <description>
-            Attached to the ground. Intelligently places itself
-            at the height of the underlying terrain.
-        </description>
-        <Point>
-            <coordinates>-122.0822035425683,37.42228990140251,0</coordinates>
-        </Point>
-    </Placemark>
+    <Document>
+        @foreach(var peer in Model.Peers) {
+            <Placemark>
+                <name>@peer.name (@peer.location)</name>
+                <description>
+                    <![CDATA[
+@peer.state
+@peer.address
+                    ]]>
+                </description>
+                <Point>
+                    <coordinates>@peer.lon,@peer.lat,0</coordinates>
+                </Point>
+            </Placemark>
+        }
+    </Document>
 </kml>

@@ -23,6 +23,7 @@ namespace RSKeyExchange
         public void ConfigureServices(IServiceCollection services)
         {
 			services.AddSingleton<RetroShareHTTPClient>();
+			services.AddSingleton<GeoIp>();
 			services.AddMvc().AddRazorPagesOptions(options => {
 				options.Conventions.AddPageRoute("/Friends", "friends.kml");
 			});
