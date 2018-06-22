@@ -23,8 +23,10 @@ namespace RSKeyExchange
         public void ConfigureServices(IServiceCollection services)
         {
 			services.AddSingleton<RetroShareHTTPClient>();
-			services.AddMvc();
-        }
+			services.AddMvc().AddRazorPagesOptions(options => {
+				options.Conventions.AddPageRoute("/Friends", "friends.kml");
+			});
+		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
