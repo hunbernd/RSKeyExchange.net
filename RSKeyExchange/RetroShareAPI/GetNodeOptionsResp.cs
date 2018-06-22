@@ -10,6 +10,8 @@ namespace RSKeyExchange.RetroShareAPI
 		public GetNodeOptionsResp() { }
 
 		public string certificate;
+		public string status_message;
+		public string ext_address;
 		//etc... , not needed
 	}
 }

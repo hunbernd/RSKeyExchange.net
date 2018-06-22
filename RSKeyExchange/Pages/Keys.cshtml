@@ -7,7 +7,7 @@
 <h2>Kulcsok</h2>
 @foreach(var peer in Model.Peers) {
     <div>
-        @peer.name: @peer.location (@peer.type)
+        @peer.name: @peer.location (@peer.type) (@peer.address @peer.state @peer.avatar)
         <br />
         <textarea readonly cols="64" rows="15">@peer.certificate</textarea>
     </div>

@@ -52,6 +52,22 @@ namespace RSKeyExchange.RetroShareAPI
 			}
 		}
 
+		public async Task<GetNodeOptionsResp> GetNodeOptions(string peerid)
+		{
+			try {
+				Uri peersUrl = new Uri($"/{URIADD}/peers/get_node_options", UriKind.Relative);
+				var res = await _client.PostAsJsonAsync<GetNodeOptionsReq>(peersUrl, new GetNodeOptionsReq(peerid));
+				res.EnsureSuccessStatusCode();
+				var resp = await res.Content.ReadAsAsync<Response<GetNodeOptionsResp>>();
+				if(resp.returncode != "ok")
+					throw new Exception("Error accessing to RetroShare API: " + resp.debug_msg);
+				else
+					return resp.data;
+			} catch(HttpRequestException) {
+				throw;
+			}
+		}
+
 		public async Task<IList<Location>> GetActivePeers()
 		{
 			List<Location> locations = new List<Location>();

@@ -14,6 +14,9 @@ namespace RSKeyExchange.Pages
 		public string location;
 		public string type;
 		public string certificate;
+		public string avatar;
+		public string address;
+		public string state;
 	}
 
     public class KeysModel : PageModel
@@ -31,12 +34,15 @@ namespace RSKeyExchange.Pages
 			Peers = new List<PeerInfo>();
 			var locations = await _client.GetActivePeers();
 			foreach(Location l in locations) {
-				String cert = await _client.GetCert(l.peer_id);
+				GetNodeOptionsResp resp = await _client.GetNodeOptions(l.peer_id);
 				PeerInfo info = new PeerInfo {
 					name = l.name,
 					location = l.location,
 					type = l.nodeType,
-					certificate = cert
+					certificate = resp.certificate,
+					avatar = l.avatar_address,
+					state = resp.status_message,
+					address = resp.ext_address
 				};
 				Peers.Add(info);
 			}
